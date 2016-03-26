@@ -11,64 +11,51 @@ import java.util.*;
 public class PerceptronNetwork implements Network {
 
     private List<InputNeuron> inputLayer;
-    private List<Neuron> middleLayer;
-    private List<Neuron> outputLayer;
+
+    private List<List<Neuron>> layers;
+
 
     /**
-     * @param inputCount count neurons of input layer
-     * @param middleCount count neurons of middle layer
-     * @param outputCount count neurons of output layer
+     *
      * @param function activation function
+     * @param inputCount count of inputs
+     * @param layersCount count of layers
      */
-    public PerceptronNetwork(int inputCount, int middleCount, int outputCount, ActivationFunction function) {
+    public PerceptronNetwork(ActivationFunction function, int inputCount, int ... layersCount) {
 
         inputLayer = new ArrayList<>(inputCount);
-        middleLayer = new ArrayList<>(middleCount);
-        outputLayer = new ArrayList<>(outputCount);
+
+        layers = new ArrayList<>();
 
         Random random = new Random();
 
-        //input links
         for (int i = 0; i < inputCount; i++) {
             InputNeuron neuron = new InputNeuron();
             neuron.setActivationFunction(function);
             inputLayer.add(neuron);
         }
 
-        //middle layer
-        for (int i = 0; i < middleCount; i++) {
-            StandardNeuron middleNeuron = new StandardNeuron();
-            middleNeuron.setActivationFunction(function);
+        List<? extends Neuron> inputs = inputLayer;
+        for (int count : layersCount) {
+            layers.add(new ArrayList<Neuron>(count));
 
-            for (Neuron inputNeuron : inputLayer) {
-                NeuralLink link = new NeuralLink();
-                link.setWeight(random.nextDouble());
+            for (int i=0; i<count; i++) {
+                StandardNeuron neuron = new StandardNeuron();
+                neuron.setActivationFunction(function);
 
-                inputNeuron.addOutputLink(link);
-                link.setInputNeuron(inputNeuron);
+                for (Neuron inputNeuron : inputs) {
+                    NeuralLink link = new NeuralLink();
+                    link.setWeight(random.nextDouble() - 0.5);
 
-                middleNeuron.addInputLink(link);
-                link.setOutputNeuron(middleNeuron);
+                    inputNeuron.addOutputLink(link);
+                    link.setInputNeuron(inputNeuron);
+
+                    neuron.addInputLink(link);
+                    link.setOutputNeuron(neuron);
+                }
+                layers.get(layers.size() - 1).add(neuron);
             }
-            middleLayer.add(middleNeuron);
-        }
-
-        //output layer
-        for (int i = 0; i < outputCount; i++) {
-            StandardNeuron outputNeuron = new StandardNeuron();
-            outputNeuron.setActivationFunction(function);
-
-            for (Neuron middleNeuron : middleLayer) {
-                NeuralLink link = new NeuralLink();
-                link.setWeight(random.nextDouble());
-
-                middleNeuron.addOutputLink(link);
-                link.setInputNeuron(middleNeuron);
-
-                outputNeuron.addInputLink(link);
-                link.setOutputNeuron(outputNeuron);
-            }
-            outputLayer.add(outputNeuron);
+            inputs = layers.get(layers.size() - 1);
         }
     }
 
@@ -77,6 +64,8 @@ public class PerceptronNetwork implements Network {
         if (inputValues.length != inputLayer.size()) {
             throw new IllegalArgumentException("Count of input values must be equals " + inputLayer.size());
         }
+        List<Neuron> outputLayer = layers.get(layers.size() - 1);
+
         double[] result = new double[outputLayer.size()];
 
         for (int i=0; i<inputLayer.size(); i++) {
@@ -103,6 +92,6 @@ public class PerceptronNetwork implements Network {
 
     @Override
     public List<List<Neuron>> getLayers() {
-        return Arrays.asList(middleLayer, outputLayer);
+        return layers;
     }
 }

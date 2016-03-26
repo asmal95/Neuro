@@ -15,12 +15,15 @@ public class PerceptronTeacher implements Teacher {
 
     @Override
     public void training(Network network, double[] inputValues, double[] expectedOutputValues) {
+        training(network, inputValues, expectedOutputValues, 1);
+    }
+
+    @Override
+    public void training(Network network, double[] inputValues, double[] expectedOutputValues, double learningRate) {
         double[] outputValues = network.process(inputValues);
         double[] errors = new double[expectedOutputValues.length];
 
-        //// TODO: 20.03.2016  Unify the process of learning for multiple layers
-
-        List<Neuron> outputLayer = network.getLayers().get(1);
+        List<Neuron> outputLayer = network.getLayers().get(network.getLayers().size() - 1);
 
         for (int i = 0; i < outputLayer.size(); i++) {
             errors[i] = (expectedOutputValues[i] - outputValues[i]) * outputLayer.get(i).getDerivativeValue();
@@ -28,27 +31,33 @@ public class PerceptronTeacher implements Teacher {
             neuronErrors.put(outputLayer.get(i), errors[i]);
 
             for(int j = 0; j < outputLayer.get(i).getInputLinks().size(); j++) {
-                double weightDelta = errors[i] * outputLayer.get(i).getInputLinks().get(j).getInputNeuron().getOutputValue();
+                double weightDelta = learningRate * errors[i] * outputLayer.get(i).getInputLinks().get(j).getInputNeuron().getOutputValue();
 
                 outputLayer.get(i).getInputLinks().get(j).setWeight(outputLayer.get(i).getInputLinks().get(j).getWeight() + weightDelta);
             }
         }
 
-        List<Neuron> middleLayer = network.getLayers().get(0);
 
-        for (int i = 0; i < middleLayer.size(); i++) {
 
-            double errorSum = 0;
+        int countOfHiddenLayers = network.getLayers().size() - 1; //layers without output layer
 
-            for (NeuralLink link : middleLayer.get(i).getOutputLinks()) {
-                errorSum += link.getWeight() * neuronErrors.get(link.getOutputNeuron());
-            }
+        for (int i = countOfHiddenLayers - 1; i >= 0; i--) {
+            List<Neuron> middleLayer = network.getLayers().get(i);
+            for (int j = 0; j < middleLayer.size(); j++) {
 
-            double error = errorSum * middleLayer.get(i).getDerivativeValue();
-            for(int j = 0; j < middleLayer.get(i).getInputLinks().size(); j++) {
-                double weightDelta = error * middleLayer.get(i).getInputLinks().get(j).getInputNeuron().getOutputValue();
+                double errorSum = 0;
 
-                middleLayer.get(i).getInputLinks().get(j).setWeight(middleLayer.get(i).getInputLinks().get(j).getWeight() + weightDelta);
+                for (NeuralLink link : middleLayer.get(j).getOutputLinks()) {
+                    errorSum += link.getWeight() * neuronErrors.get(link.getOutputNeuron());
+                }
+
+                double error = errorSum * middleLayer.get(j).getDerivativeValue();
+                neuronErrors.put(middleLayer.get(j), error);
+                for (int k = 0; k < middleLayer.get(j).getInputLinks().size(); k++) {
+                    double weightDelta = learningRate * error * middleLayer.get(j).getInputLinks().get(k).getInputNeuron().getOutputValue();
+
+                    middleLayer.get(j).getInputLinks().get(k).setWeight(middleLayer.get(j).getInputLinks().get(k).getWeight() + weightDelta);
+                }
             }
         }
     }
