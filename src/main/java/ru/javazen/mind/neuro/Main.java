@@ -1,28 +1,28 @@
 package ru.javazen.mind.neuro;
 
-import ru.javazen.mind.neuro.education.PerceptronTeacher;
+import ru.javazen.mind.neuro.education.BackpropagationTeacher;
 import ru.javazen.mind.neuro.education.Teacher;
 import ru.javazen.mind.neuro.function.SigmoidFunction;
-import ru.javazen.mind.neuro.network.PerceptronNetwork;
+import ru.javazen.mind.neuro.network.MultiLayerNetwork;
 
 public class Main {
 
     public static void main(String[] args) {
-        PerceptronNetwork network = new PerceptronNetwork(2, 2, 1, SigmoidFunction.getInstance());
+        MultiLayerNetwork network = new MultiLayerNetwork(SigmoidFunction.getInstance(), 2, 3, 1);
 
         double[][] inputs = new double[][]          {{1, 1}, {0, 1}, {1, 0}, {0, 0}};
         double[][] expectedOutputs = new double[][] {{0},    {1},    {1},    {0}}; //XOR
 
-        Teacher teacher = new PerceptronTeacher();
+        Teacher teacher = new BackpropagationTeacher();
 
         int count = 0;
 
         while (true) {
             for (int i = 0; i< inputs.length; i++) {
-                teacher.training(network, inputs[i], expectedOutputs[i]);
+                teacher.training(network, inputs[i], expectedOutputs[i], 1.4);
             }
 
-            if (count++ > 10000) {
+            if (count++ > 2000) {
                 break;
             }
         }

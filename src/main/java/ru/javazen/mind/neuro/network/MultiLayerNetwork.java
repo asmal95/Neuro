@@ -8,7 +8,7 @@ import ru.javazen.mind.neuro.neuron.StandardNeuron;
 
 import java.util.*;
 
-public class PerceptronNetwork implements Network {
+public class MultiLayerNetwork implements Network {
 
     private List<InputNeuron> inputLayer;
 
@@ -21,7 +21,7 @@ public class PerceptronNetwork implements Network {
      * @param inputCount count of inputs
      * @param layersCount count of layers
      */
-    public PerceptronNetwork(ActivationFunction function, int inputCount, int ... layersCount) {
+    public MultiLayerNetwork(ActivationFunction function, int inputCount, int ... layersCount) {
 
         inputLayer = new ArrayList<>(inputCount);
 
@@ -75,17 +75,6 @@ public class PerceptronNetwork implements Network {
             Neuron neuron = outputLayer.get(i);
             result[i] = neuron.getOutputValue();
         }
-
-        //todo
-        /*for (Neuron neuron : inputLayer) {
-            neuron.reset();
-        }
-        for (Neuron neuron : middleLayer) {
-            neuron.reset();
-        }
-        for (Neuron neuron : outputLayer) {
-            neuron.reset();
-        }*/
 
         return result;
     }

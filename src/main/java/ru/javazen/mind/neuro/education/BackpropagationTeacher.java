@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PerceptronTeacher implements Teacher {
+public class BackpropagationTeacher implements Teacher {
 
     //use for save errors of neurons
     private Map<Neuron, Double> neuronErrors = new HashMap<>();
