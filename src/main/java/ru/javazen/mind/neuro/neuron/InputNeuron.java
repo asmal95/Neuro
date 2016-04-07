@@ -20,7 +20,7 @@ public class InputNeuron implements Neuron {
 
     public void setInputValue(double value) {
         inputValue = value;
-        isCalculateValue = false;
+        reset();
     }
 
     private double process() {
@@ -29,10 +29,10 @@ public class InputNeuron implements Neuron {
 
     @Override
     public double getOutputValue() {
-        //if (!isCalculateValue) { //todo
+        if (!isCalculateValue) {
             calculateValue = process();
             isCalculateValue = true;
-        //}
+        }
 
         return calculateValue;
     }
@@ -45,7 +45,7 @@ public class InputNeuron implements Neuron {
     @Override
     public void setActivationFunction(ActivationFunction activationFunction) {
         this.activationFunction = activationFunction;
-        isCalculateValue = false;
+        reset();
     }
 
     @Override
@@ -73,8 +73,11 @@ public class InputNeuron implements Neuron {
         throw new NotImplementedException();
     }
 
-    /*@Override
+    @Override
     public void reset() {
-        isCalculateValue = false;
-    }*/
+        if (isCalculateValue) {
+            outputLinks.forEach(l -> l.reset());
+            isCalculateValue = false;
+        }
+    }
 }

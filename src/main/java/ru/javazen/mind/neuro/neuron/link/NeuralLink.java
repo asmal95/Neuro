@@ -12,6 +12,7 @@ public class NeuralLink {
     }
 
     public void setInputNeuron(Neuron inputNeuron) {
+        reset();
         this.inputNeuron = inputNeuron;
     }
 
@@ -24,10 +25,17 @@ public class NeuralLink {
     }
 
     public double getWeight() {
+        reset();
         return weight;
     }
 
     public void setWeight(double weight) {
         this.weight = weight;
+    }
+
+    public void reset() {
+        if (outputNeuron != null) {
+            outputNeuron.reset();
+        }
     }
 }

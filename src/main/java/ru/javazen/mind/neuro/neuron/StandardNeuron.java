@@ -27,10 +27,10 @@ public class StandardNeuron implements Neuron {
 
     @Override
     public double getOutputValue() {
-        //if (!isCalculateValue) { //todo
+        if (!isCalculateValue) {
             calculateValue = process();
             isCalculateValue = true;
-        //}
+        }
 
         return calculateValue;
     }
@@ -49,6 +49,7 @@ public class StandardNeuron implements Neuron {
     @Override
     public void setActivationFunction(ActivationFunction activationFunction) {
         this.activationFunction = activationFunction;
+        reset();
     }
 
     @Override
@@ -69,6 +70,7 @@ public class StandardNeuron implements Neuron {
     @Override
     public void addInputLink(NeuralLink neuralLink) {
         inputNeuralLinks.add(neuralLink);
+        reset();
     }
 
     @Override
@@ -76,8 +78,11 @@ public class StandardNeuron implements Neuron {
         outputNeuralLinks.add(neuralLink);
     }
 
-    /*@Override
+    @Override
     public void reset() {
-        isCalculateValue = false;
-    }*/
+        if (isCalculateValue) {
+            outputNeuralLinks.forEach(l -> l.reset());
+            isCalculateValue = false;
+        }
+    }
 }

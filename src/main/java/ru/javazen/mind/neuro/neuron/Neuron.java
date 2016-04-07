@@ -19,6 +19,6 @@ public interface Neuron {
     List<NeuralLink> getInputLinks();
     List<NeuralLink> getOutputLinks();
 
-    /*void reset();*/
+    void reset();
 
 }
