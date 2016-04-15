@@ -10,9 +10,9 @@ import java.util.*;
 
 public class MultiLayerNetwork implements Network {
 
-    private List<InputNeuron> inputLayer;
+    protected List<InputNeuron> inputLayer;
 
-    private List<List<Neuron>> layers;
+    protected List<List<Neuron>> layers;
 
 
     /**
