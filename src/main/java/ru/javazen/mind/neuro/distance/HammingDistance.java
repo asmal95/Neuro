@@ -1,6 +1,6 @@
 package ru.javazen.mind.neuro.distance;
 
-public class EuclideanDistance implements DistanceFunction {
+public class HammingDistance implements DistanceFunction {
 
     @Override
     public double distance(double[] fCoords, double[] sCoords) {
@@ -8,12 +8,14 @@ public class EuclideanDistance implements DistanceFunction {
             throw new IllegalArgumentException();
         }
 
-        double sqrSum = 0;
+        double sum = 0;
 
         for (int i = 0; i < fCoords.length; i++) {
-            sqrSum += (fCoords[i] - sCoords[i]) * (fCoords[i] - sCoords[i]);
+            if (Math.abs(fCoords[i] - sCoords[i]) < 0.001) {
+                sum++;
+            }
         }
 
-        return Math.sqrt(sqrSum);
+        return sum;
     }
 }

@@ -1,5 +1,5 @@
 package ru.javazen.mind.neuro.distance;
 
-public interface Distance {
+public interface DistanceFunction {
     double distance(double[] firstCoordinates, double[] secondCoordinates);
 }
