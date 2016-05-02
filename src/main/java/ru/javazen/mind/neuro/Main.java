@@ -12,22 +12,32 @@ import ru.javazen.mind.neuro.network.MultiLayerNetwork;
 public class Main {
 
     public static void main(String[] args) {
-        KohonenNetwork network = new KohonenNetwork(SigmoidFunction.getInstance(), new ConstantFunction(), 2, 2);
+        KohonenNetwork network = new KohonenNetwork(SigmoidFunction.getInstance(), new GaussianFunction(), 2, 2);
 
         double[][] inputs = new double[][]{
-                {0.11, 0.12},
-                {0.15, 0.12},
+                /*{0.11, 0.12},
+                {0.09, 0.07},*/
+                {-4, -4},
+                {-3, -2},
+                {-2, -3},
+                /*{30, 20},
+                {25, 23},
+                {31, 27},*/
+                {4, 3},
+                {3, 3},
+                {4, 2},
+                /*{0.15, 0.12},
                 {0.09, 0.07},
                 {0.21, 0.31},
-                {0.31, 0.21},
-                {0.4, 0.3},
-                {0.6, 0.65},
-                {0.89, 0.69},
+                {0.31, 0.21},*/
+                /*{0.4, 0.3},
+                {0.6, 0.65},*/
+                /*{0.89, 0.69},
                 {0.94, 0.83},
                 {0.71, 0.61},
-                {0.95, 0.81},
-                {0.59, 0.62},
-                {0.75, 0.86},
+                {0.59, 0.62},*/
+                /*{0.88, 0.86},
+                {0.95, 0.81},*/
         };
 
         int count = 1;
@@ -37,13 +47,13 @@ public class Main {
                 network.training(inputs[i], new EuclideanDistance(), count);
             }
 
-            if (count++ > 10) {
+            if (count++ > 2) {
                 break;
             }
         }
 
         double[] res = network.process(new double[]
-                {0.13, 0.23});
+                {2, 3});
 
         for(double out : res) {
             System.out.println(/*Math.round*/(out));
@@ -52,7 +62,7 @@ public class Main {
 
 
         res = network.process(new double[]
-                {0.4, 0.19});
+                {3, 3});
 
         for(double out : res) {
             System.out.println(/*Math.round*/(out));
@@ -62,7 +72,8 @@ public class Main {
 
 
         res = network.process(new double[]
-                {0.78, 0.89});
+                {-3, -2});
+                /*{30, 20});*/
 
         for(double out : res) {
             System.out.println(/*Math.round*/(out));
@@ -71,7 +82,8 @@ public class Main {
 
 
         res = network.process(new double[]
-                {0.89, 0.95});
+                {-4, -3});
+                /*{31, 26});*/
 
         for(double out : res) {
             System.out.println(/*Math.round*/(out));
