@@ -1,7 +1,7 @@
 package ru.javazen.mind.neuro.network;
 
 import ru.javazen.mind.neuro.distance.DistanceFunction;
-import ru.javazen.mind.neuro.function.ActivationFunction;
+import ru.javazen.mind.neuro.activation.ActivationFunction;
 import ru.javazen.mind.neuro.neighborhood.NeighborhoodFunction;
 import ru.javazen.mind.neuro.neuron.Neuron;
 import ru.javazen.mind.neuro.neuron.link.NeuralLink;

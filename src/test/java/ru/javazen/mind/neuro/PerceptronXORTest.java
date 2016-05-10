@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import ru.javazen.mind.neuro.education.BackpropagationTeacher;
-import ru.javazen.mind.neuro.function.SigmoidFunction;
+import ru.javazen.mind.neuro.activation.SigmoidFunction;
 import ru.javazen.mind.neuro.network.MultiLayerNetwork;
 
 import java.util.Arrays;

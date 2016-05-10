@@ -1,4 +1,4 @@
-package ru.javazen.mind.neuro.function;
+package ru.javazen.mind.neuro.activation;
 
 
 public class SigmoidFunction implements ActivationFunction {
@@ -13,7 +13,7 @@ public class SigmoidFunction implements ActivationFunction {
 
     @Override
     public double process(double value) {
-        return 1/(1+Math.pow(Math.E, -value));
+        return 1/(1+Math.exp(-value));
     }
 
     @Override

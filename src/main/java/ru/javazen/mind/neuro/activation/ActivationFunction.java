@@ -1,4 +1,4 @@
-package ru.javazen.mind.neuro.function;
+package ru.javazen.mind.neuro.activation;
 
 
 public interface ActivationFunction {

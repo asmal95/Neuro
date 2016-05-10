@@ -1,43 +1,98 @@
 package ru.javazen.mind.neuro;
 
-import ru.javazen.mind.neuro.distance.EuclideanDistance;
-import ru.javazen.mind.neuro.education.BackpropagationTeacher;
-import ru.javazen.mind.neuro.education.Teacher;
-import ru.javazen.mind.neuro.function.SigmoidFunction;
+import ru.javazen.mind.neuro.activation.BipolarSigmoidFunction;
+import ru.javazen.mind.neuro.distance.*;
+import ru.javazen.mind.neuro.activation.SigmoidFunction;
 import ru.javazen.mind.neuro.neighborhood.ConstantFunction;
 import ru.javazen.mind.neuro.neighborhood.GaussianFunction;
 import ru.javazen.mind.neuro.network.KohonenNetwork;
-import ru.javazen.mind.neuro.network.MultiLayerNetwork;
 
 public class Main {
 
     public static void main(String[] args) {
-        KohonenNetwork network = new KohonenNetwork(SigmoidFunction.getInstance(), new GaussianFunction(), 2, 2);
+        KohonenNetwork network = new KohonenNetwork(BipolarSigmoidFunction.getInstance(), new GaussianFunction(), 36, 3);
 
         double[][] inputs = new double[][]{
-                /*{0.11, 0.12},
-                {0.09, 0.07},*/
-                {-4, -4},
-                {-3, -2},
-                {-2, -3},
-                /*{30, 20},
-                {25, 23},
-                {31, 27},*/
-                {4, 3},
-                {3, 3},
-                {4, 2},
-                /*{0.15, 0.12},
-                {0.09, 0.07},
-                {0.21, 0.31},
-                {0.31, 0.21},*/
-                /*{0.4, 0.3},
-                {0.6, 0.65},*/
-                /*{0.89, 0.69},
-                {0.94, 0.83},
-                {0.71, 0.61},
-                {0.59, 0.62},*/
-                /*{0.88, 0.86},
-                {0.95, 0.81},*/
+                {
+                        1, 1, 0, 0, 0, 0,
+                        1, 1, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                },
+                {
+                        1, 1, 0, 0, 0, 0,
+                        0, 1, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                },
+                {
+                        1, 1, 1, 0, 0, 0,
+                        1, 1, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                },
+                {
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 1, 1, 1,
+                        0, 0, 0, 0, 1, 1,
+                },
+                {
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 1, 1,
+                        0, 0, 0, 0, 1, 1,
+                },
+                {
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 1, 1,
+                        0, 0, 0, 1, 0, 1,
+                },
+                {
+                        0, 0, 0, 0, 1, 1,
+                        0, 0, 0, 0, 1, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                },
+                {
+                        0, 0, 0, 0, 1, 1,
+                        0, 0, 0, 0, 1, 1,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                },
+                {
+                        0, 0, 0, 0, 1, 0,
+                        0, 0, 0, 0, 1, 1,
+                        0, 0, 0, 0, 1, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                },
+                /*{
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                },*/
         };
 
         int count = 1;
@@ -47,47 +102,57 @@ public class Main {
                 network.training(inputs[i], new EuclideanDistance(), count);
             }
 
-            if (count++ > 2) {
+            if (count++ > 200) {
                 break;
             }
         }
 
         double[] res = network.process(new double[]
-                {2, 3});
+                {
+                        0, 0, 0, 0, 1, 1,
+                        0, 0, 0, 0, 1, 1,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                });
 
         for(double out : res) {
-            System.out.println(/*Math.round*/(out));
+            System.out.print(Math.round(out) + " ");
+        }
+        System.out.println();
+
+        res = network.process(new double[]
+                {
+                        1, 1, 0, 0, 0, 0,
+                        1, 1, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                });
+
+        for(double out : res) {
+            System.out.print(Math.round(out) + " ");
         }
         System.out.println();
 
 
         res = network.process(new double[]
-                {3, 3});
+                {
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 1, 1,
+                        0, 0, 0, 0, 1, 1,
+                });
 
         for(double out : res) {
-            System.out.println(/*Math.round*/(out));
+            System.out.print(Math.round(out) + " ");
         }
         System.out.println();
 
 
-
-        res = network.process(new double[]
-                {-3, -2});
-                /*{30, 20});*/
-
-        for(double out : res) {
-            System.out.println(/*Math.round*/(out));
-        }
-        System.out.println();
-
-
-        res = network.process(new double[]
-                {-4, -3});
-                /*{31, 26});*/
-
-        for(double out : res) {
-            System.out.println(/*Math.round*/(out));
-        }
-        System.out.println();
     }
 }

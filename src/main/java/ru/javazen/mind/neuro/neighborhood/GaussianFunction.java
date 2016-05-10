@@ -4,7 +4,7 @@ public class GaussianFunction implements NeighborhoodFunction {
 
     @Override
     public double process(double distance, int time) {
-        return Math.exp(-(distance/(2 * sigma(time))));
+        return Math.exp(-(distance/(/*2 * */sigma(time))));
     }
 
     private double sigma(int t) {

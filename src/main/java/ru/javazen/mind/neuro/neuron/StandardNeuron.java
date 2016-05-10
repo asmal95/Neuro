@@ -1,6 +1,6 @@
 package ru.javazen.mind.neuro.neuron;
 
-import ru.javazen.mind.neuro.function.ActivationFunction;
+import ru.javazen.mind.neuro.activation.ActivationFunction;
 import ru.javazen.mind.neuro.neuron.link.NeuralLink;
 
 import java.util.ArrayList;

@@ -1,14 +1,14 @@
 package ru.javazen.mind.neuro.distance;
 
-public class PowerDistance implements DistanceFunction {
+public class MinkowskiDistance implements DistanceFunction {
 
     private double r, p;
 
-    public PowerDistance() {
+    public MinkowskiDistance() {
         this(2, 2);
     }
 
-    public PowerDistance(double r, double p) {
+    public MinkowskiDistance(double r, double p) {
         this.r = r;
         this.p = p;
     }
@@ -41,6 +41,6 @@ public class PowerDistance implements DistanceFunction {
             sqrSum += Math.pow((fCoords[i] - sCoords[i]), p);
         }
 
-        return Math.pow(sqrSum, 1/r); //may be use Math.exp(Math.log(sqrSum)/r) ? (It's faster)
+        return Math.exp(Math.log(sqrSum)/r);
     }
 }
