@@ -45,7 +45,7 @@ public class MultiLayerNetwork implements Network {
 
                 for (Neuron inputNeuron : inputs) {
                     NeuralLink link = new NeuralLink();
-                    link.setWeight(random.nextDouble() - 0.5);
+                    link.setWeight(random.nextDouble()/2 - 0.25);
 
                     inputNeuron.addOutputLink(link);
                     link.setInputNeuron(inputNeuron);

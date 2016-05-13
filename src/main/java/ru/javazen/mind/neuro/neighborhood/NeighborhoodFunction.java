@@ -8,5 +8,5 @@ public interface NeighborhoodFunction {
      * @param time number of training phase
      * @return
      */
-    double process(double distance, int time);
+    double process(double distance, double time);
 }

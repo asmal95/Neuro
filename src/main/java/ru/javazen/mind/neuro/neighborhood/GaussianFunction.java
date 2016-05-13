@@ -2,16 +2,16 @@ package ru.javazen.mind.neuro.neighborhood;
 
 public class GaussianFunction implements NeighborhoodFunction {
 
+    private static final double M = 0;
+    private static final double SQRT_OF_2PI = Math.sqrt(2*Math.PI);
+
     @Override
-    public double process(double distance, int time) {
-        return Math.exp(-(distance/(/*2 * */sigma(time))));
+    public double process(double distance, double time) {
+        double sigma = sigma(time);
+        return (1/(sigma * SQRT_OF_2PI)) * Math.exp(-(Math.pow(distance-M, 2)/(2 * Math.pow(sigma, 2))));
     }
 
-    private double sigma(int t) {
+    private double sigma(double t) {
         return 1/Math.exp(Math.pow(t, -2));
-    }
-
-    private double a(int k) {
-        return (double)1/(k*2);
     }
 }
