@@ -8,6 +8,7 @@ import org.junit.runners.Parameterized;
 import ru.javazen.mind.neuro.education.BackpropagationTeacher;
 import ru.javazen.mind.neuro.activation.SigmoidFunction;
 import ru.javazen.mind.neuro.network.MultiLayerNetwork;
+import ru.javazen.mind.neuro.network.PerceptronNetwork;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,7 +16,7 @@ import java.util.Collection;
 @RunWith(Parameterized.class)
 public class PerceptronXORTest {
 
-    private static MultiLayerNetwork multiLayerNetwork;
+    private static PerceptronNetwork perceptronNetwork;
     private static final double MAX_ERROR = 0.1;
 
     private double[] input;
@@ -23,13 +24,13 @@ public class PerceptronXORTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        multiLayerNetwork = new MultiLayerNetwork(SigmoidFunction.getInstance(), 2, 3, 1);
+        perceptronNetwork = new PerceptronNetwork(SigmoidFunction.getInstance(), 2, 3, 1);
         BackpropagationTeacher teacher = new BackpropagationTeacher();
         for (int i = 0; i < 2000; i++) {
             for (Object[] params : data()) {
                 double[] input = (double[]) params[0];
                 double expectedOutput = (double) params[1];
-                teacher.training(multiLayerNetwork, input, new double[]{expectedOutput});
+                teacher.training(perceptronNetwork, input, new double[]{expectedOutput});
             }
         }
     }
@@ -52,7 +53,7 @@ public class PerceptronXORTest {
     @Test
     public void process() throws Exception {
         System.out.println("Input: " + Arrays.toString(input));
-        double actualOutput = multiLayerNetwork.process(input)[0];
+        double actualOutput = perceptronNetwork.process(input)[0];
         double error = Math.abs(actualOutput - expectedOutput);
 
         System.out.println("Expected: " + expectedOutput);

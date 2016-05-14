@@ -1,6 +1,7 @@
 package ru.javazen.mind.neuro.education;
 
-import ru.javazen.mind.neuro.network.Network;
+import ru.javazen.mind.neuro.network.PerceptronNetwork;
+import ru.javazen.mind.neuro.neuron.ArtificialNeuron;
 import ru.javazen.mind.neuro.neuron.Neuron;
 import ru.javazen.mind.neuro.neuron.link.NeuralLink;
 
@@ -8,22 +9,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BackpropagationTeacher implements Teacher {
+public class BackpropagationTeacher implements Teacher<PerceptronNetwork> {
 
     //use for save errors of neurons
     private Map<Neuron, Double> neuronErrors = new HashMap<>();
 
     @Override
-    public void training(Network network, double[] inputValues, double[] expectedOutputValues) {
+    public void training(PerceptronNetwork network, double[] inputValues, double[] expectedOutputValues) {
         training(network, inputValues, expectedOutputValues, 1);
     }
 
     @Override
-    public void training(Network network, double[] inputValues, double[] expectedOutputValues, double learningRate) {
+    public void training(PerceptronNetwork network, double[] inputValues, double[] expectedOutputValues, double learningRate) {
         double[] outputValues = network.process(inputValues);
         double[] errors = new double[expectedOutputValues.length];
 
-        List<Neuron> outputLayer = network.getLayers().get(network.getLayers().size() - 1);
+        List<ArtificialNeuron> outputLayer = network.getLayers().get(network.getLayers().size() - 1);
 
         for (int i = 0; i < outputLayer.size(); i++) {
             errors[i] = (expectedOutputValues[i] - outputValues[i]) * outputLayer.get(i).getDerivativeValue();
@@ -42,7 +43,7 @@ public class BackpropagationTeacher implements Teacher {
         int countOfHiddenLayers = network.getLayers().size() - 1; //layers without output layer
 
         for (int i = countOfHiddenLayers - 1; i >= 0; i--) {
-            List<Neuron> middleLayer = network.getLayers().get(i);
+            List<ArtificialNeuron> middleLayer = network.getLayers().get(i);
             for (int j = 0; j < middleLayer.size(); j++) {
 
                 double errorSum = 0;

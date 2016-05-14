@@ -5,7 +5,7 @@ import ru.javazen.mind.neuro.neuron.Neuron;
 
 import java.util.List;
 
-public interface Network {
+public interface Network<T extends Neuron> {
 
     /**
      * Performs work neural network
@@ -13,10 +13,4 @@ public interface Network {
      * @return result values from output layer
      */
     double[] process(double[] inputValues);
-
-    /**
-     * Returns all layers without input layer (because it layer not contains input relations with weights)
-     * @return all layers
-     */
-    List<List<Neuron>> getLayers();
 }

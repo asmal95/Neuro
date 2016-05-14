@@ -13,8 +13,6 @@ public class InputNeuron implements Neuron {
     private double inputValue;
 
     private List<NeuralLink> outputLinks = new ArrayList<>();
-    private ActivationFunction activationFunction;
-
     private boolean isCalculateValue;
     private double calculateValue;
 
@@ -24,7 +22,7 @@ public class InputNeuron implements Neuron {
     }
 
     private double process() {
-        return /*activationFunction.process*/(inputValue);
+        return inputValue;
     }
 
     @Override
@@ -35,22 +33,6 @@ public class InputNeuron implements Neuron {
         }
 
         return calculateValue;
-    }
-
-    @Override
-    public double getDerivativeValue() {
-        return activationFunction.derivative(inputValue);
-    }
-
-    @Override
-    public void setActivationFunction(ActivationFunction activationFunction) {
-        this.activationFunction = activationFunction;
-        reset();
-    }
-
-    @Override
-    public ActivationFunction getActivationFunction() {
-        return activationFunction;
     }
 
     @Override

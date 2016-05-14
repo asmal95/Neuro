@@ -16,22 +16,31 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) {
-        KohonenNetwork network = new KohonenNetwork(SigmoidFunction.getInstance(), new GaussianFunction(), 20, 5);
+        KohonenNetwork network = new KohonenNetwork(new EuclideanDistance(), new GaussianFunction(), 20, 5);
 
         Map<String, List<Double>> eduMap = loadSet("animals.set", 20);
 
-        double era = 0.8;
-        while (era < 5) {
+        /*double era = 0.8;
+        while (era < 3) {
             era += 0.1;
             for (List<Double> v : eduMap.values()) {
                 double[] doubles = new double[v.size()];
                 for (int i=0; i<v.size(); i++) {
                     doubles[i] = v.get(i);
                 }
-                network.training(doubles, new EuclideanDistance(), era);
+                training(doubles, era);
             }
-
+        }*/
+        double[][] inputVector = new double[eduMap.size()][];
+        int count = 0;
+        for (List<Double> v : eduMap.values()) {
+            inputVector[count] = new double[v.size()];
+            for (int i=0; i<v.size(); i++) {
+                inputVector[count][i] = v.get(i);
+            }
+            count++;
         }
+        network.training(inputVector);
 
         double[] res;
 
@@ -53,7 +62,6 @@ public class Main {
         }
 
     }
-
 
     private static Map<String, List<Double>> loadSet(String name, int propsCount) {
         Map<String, List<Double>> map = new HashMap<>(); //Name <list of values>

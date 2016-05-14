@@ -3,28 +3,31 @@ package ru.javazen.mind.neuro.network;
 import ru.javazen.mind.neuro.distance.DistanceFunction;
 import ru.javazen.mind.neuro.activation.ActivationFunction;
 import ru.javazen.mind.neuro.neighborhood.NeighborhoodFunction;
+import ru.javazen.mind.neuro.neuron.DistanceNeuron;
 import ru.javazen.mind.neuro.neuron.Neuron;
+import ru.javazen.mind.neuro.neuron.factory.DistanceNeuronFactory;
 import ru.javazen.mind.neuro.neuron.link.NeuralLink;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class KohonenNetwork extends MultiLayerNetwork {
+public class KohonenNetwork extends MultiLayerNetwork<DistanceNeuron> {
 
     private NeighborhoodFunction neighborhoodFunction;
+    private DistanceFunction distanceFunction;
 
-    public KohonenNetwork(ActivationFunction activationFunction, NeighborhoodFunction neighborhoodFunction, int inputCount, int outputCount) {
-        super(activationFunction, inputCount, outputCount);
+    public KohonenNetwork(DistanceFunction distanceFunction, NeighborhoodFunction neighborhoodFunction, int inputCount, int outputCount) {
+        super(new DistanceNeuronFactory(distanceFunction), inputCount, outputCount);
         this.neighborhoodFunction = neighborhoodFunction;
+        this.distanceFunction = distanceFunction;
     }
 
-    //@Override
     public double[] process(double[] inputValues, boolean normalize) {
 
 
         double[] result = super.process(inputValues);
         if (normalize) {
-            double max = Arrays.stream(result).max().getAsDouble();
+            double max = Arrays.stream(result).min().getAsDouble();
             for (int i = 0; i < result.length; i++) {
                 if (result[i] != max) {
                     result[i] = 0;
@@ -36,13 +39,23 @@ public class KohonenNetwork extends MultiLayerNetwork {
         return result;
     }
 
-    public void training(double[] inputValues, DistanceFunction distance, double era){
+    public void training(double[][] inputValues) {
+        double era = 0.8;
+        while (era < 3) {
+            era += 0.1;
+            for (double[] inputVector : inputValues) {
+                training(inputVector, era);
+            }
+        }
+    }
+
+    public void training(double[] inputValues, double era){
         if (inputValues.length != inputLayer.size()) {
             throw new IllegalArgumentException();
         }
 
         //gets a single layer of neurons
-        List<Neuron> neurons = this.getLayers().get(0);
+        List<DistanceNeuron> neurons = this.getLayers().get(0);
         int outputLength = neurons.size();
 
         for (int i=0; i<inputValues.length; i++) {
@@ -50,7 +63,7 @@ public class KohonenNetwork extends MultiLayerNetwork {
         }
 
         //calculate the distance between the inputs vector and weights of each neuron from output layer
-        double[] distances = processDistance(inputValues, neurons, distance);
+        double[] distances = processDistance(inputValues, neurons, distanceFunction);
 
         //search index of neuron which is closest to the input vector
         int indexMin = getIndexOfMinimumElement(distances);
@@ -64,7 +77,7 @@ public class KohonenNetwork extends MultiLayerNetwork {
         }
 
         //calculate the distance between the winner neuron and each neuron from output layer
-        distBetweenWinAndOther = processDistance(winWeights, neurons, distance);
+        distBetweenWinAndOther = processDistance(winWeights, neurons, distanceFunction);
 
         for (int i=0; i<outputLength; i++) {
             Neuron neuron = neurons.get(i);
@@ -73,14 +86,6 @@ public class KohonenNetwork extends MultiLayerNetwork {
                 link.setWeight(link.getWeight() + neighborhoodFunction.process(distBetweenWinAndOther[i], era) * a(era) *  (link.getInputNeuron().getOutputValue()-link.getWeight()));
             }
         }
-
-
-            /*Neuron neuron = neurons.get(indexMin);
-            List<NeuralLink> neuralLinks = neuron.getInputLinks();
-            for (NeuralLink link : neuralLinks) {
-                link.setWeight(link.getWeight() + era *  (link.getInputNeuron().getOutputValue()-link.getWeight()));
-            }*/
-        //}
     }
 
     private double a(double k) {
@@ -97,7 +102,7 @@ public class KohonenNetwork extends MultiLayerNetwork {
         return index;
     }
 
-    private double[] processDistance(double[] targetCoordinates, List<Neuron> neurons, DistanceFunction distance) {
+    private double[] processDistance(double[] targetCoordinates, List<DistanceNeuron> neurons, DistanceFunction distance) {
         double[] result = new double[neurons.size()];
         for (int i=0; i < neurons.size(); i++) {
             List<NeuralLink> neuralLinks = neurons.get(i).getInputLinks();
