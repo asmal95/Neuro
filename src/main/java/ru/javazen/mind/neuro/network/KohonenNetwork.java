@@ -1,7 +1,6 @@
 package ru.javazen.mind.neuro.network;
 
 import ru.javazen.mind.neuro.distance.DistanceFunction;
-import ru.javazen.mind.neuro.activation.ActivationFunction;
 import ru.javazen.mind.neuro.neighborhood.NeighborhoodFunction;
 import ru.javazen.mind.neuro.neuron.DistanceNeuron;
 import ru.javazen.mind.neuro.neuron.Neuron;
@@ -23,17 +22,11 @@ public class KohonenNetwork extends MultiLayerNetwork<DistanceNeuron> {
     }
 
     public double[] process(double[] inputValues, boolean normalize) {
-
-
         double[] result = super.process(inputValues);
         if (normalize) {
-            double max = Arrays.stream(result).min().getAsDouble();
+            double winnerValue = Arrays.stream(result).min().getAsDouble();
             for (int i = 0; i < result.length; i++) {
-                if (result[i] != max) {
-                    result[i] = 0;
-                } else {
-                    result[i] = 1;
-                }
+                result[i] = result[i] == winnerValue ? 1 : 0;
             }
         }
         return result;
