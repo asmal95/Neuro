@@ -6,6 +6,8 @@ import ru.javazen.mind.neuro.neuron.link.NeuralLink;
 
 public class DistanceNeuron extends AbstractNeuron {
 
+    private double potential;
+
     private DistanceFunction distanceFunction;
 
     public DistanceNeuron(DistanceFunction distanceFunction) {
@@ -33,5 +35,13 @@ public class DistanceNeuron extends AbstractNeuron {
         }
 
         return distanceFunction.distance(f, s);
+    }
+
+    public double getPotential() {
+        return potential;
+    }
+
+    public void setPotential(double potential) {
+        this.potential = potential;
     }
 }

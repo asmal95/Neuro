@@ -14,11 +14,17 @@ public class KohonenNetwork extends MultiLayerNetwork<DistanceNeuron> {
 
     private NeighborhoodFunction neighborhoodFunction;
     private DistanceFunction distanceFunction;
+    private double potentialMinimum = 0.75;
 
     public KohonenNetwork(DistanceFunction distanceFunction, NeighborhoodFunction neighborhoodFunction, int inputCount, int outputCount) {
         super(new DistanceNeuronFactory(distanceFunction), inputCount, outputCount);
         this.neighborhoodFunction = neighborhoodFunction;
         this.distanceFunction = distanceFunction;
+
+        //set potentials: p=1/n
+        for (DistanceNeuron neuron : getLayers().get(0)) {
+            neuron.setPotential(1d/outputCount);
+        }
     }
 
     public double[] process(double[] inputValues, boolean normalize) {
@@ -73,10 +79,19 @@ public class KohonenNetwork extends MultiLayerNetwork<DistanceNeuron> {
         distBetweenWinAndOther = processDistance(winWeights, neurons, distanceFunction);
 
         for (int i=0; i<outputLength; i++) {
-            Neuron neuron = neurons.get(i);
+            DistanceNeuron neuron = neurons.get(i);
             List<NeuralLink> neuralLinks = neuron.getInputLinks();
-            for (NeuralLink link : neuralLinks) {
-                link.setWeight(link.getWeight() + neighborhoodFunction.process(distBetweenWinAndOther[i], era) * a(era) *  (link.getInputNeuron().getOutputValue()-link.getWeight()));
+
+            if (neuron.getPotential() > potentialMinimum) {
+                for (NeuralLink link : neuralLinks) {
+                    link.setWeight(link.getWeight() + neighborhoodFunction.process(distBetweenWinAndOther[i], era) * a(era) * (link.getInputNeuron().getOutputValue() - link.getWeight()));
+                }
+            }
+
+            //corrected potential
+            neuron.setPotential(neuron.getPotential() + 1d/outputLength);
+            if (indexMin==i) {
+                neuron.setPotential(neuron.getPotential() - potentialMinimum);
             }
         }
     }
@@ -107,5 +122,13 @@ public class KohonenNetwork extends MultiLayerNetwork<DistanceNeuron> {
         }
 
         return result;
+    }
+
+    public double getPotentialMinimum() {
+        return potentialMinimum;
+    }
+
+    public void setPotentialMinimum(double potentialMinimum) {
+        this.potentialMinimum = potentialMinimum;
     }
 }
