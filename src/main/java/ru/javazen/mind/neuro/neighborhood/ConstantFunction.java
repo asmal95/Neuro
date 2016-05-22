@@ -14,14 +14,9 @@ public class ConstantFunction implements NeighborhoodFunction {
 
     @Override
     public double process(double distance, double time) {
-        return distance <= sigma(time) ? constValue : 0;
+        return distance == 0 ? constValue*a(time) : 0;
     }
-
-    private double sigma(double t) {
-        return 1/Math.exp(Math.pow(t, -2));
-    }
-
-    private double a(int k) {
-        return (double)1/(k);
+    private double a(double k) {
+        return 2d/(3+k);
     }
 }

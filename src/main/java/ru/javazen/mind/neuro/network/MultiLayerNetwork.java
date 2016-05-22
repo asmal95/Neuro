@@ -9,11 +9,15 @@ import java.util.*;
 
 public abstract class MultiLayerNetwork<T extends Neuron> implements Network<T> {
 
+    protected static final Random RANDOM = new Random();
+
     protected List<InputNeuron> inputLayer;
 
     protected List<List<T>> layers;
 
-    protected NeuronFactory neuronFactory;
+    protected NeuronFactory<T> neuronFactory;
+
+    protected abstract double getInitWeightValue();
 
     /**
      *
@@ -43,7 +47,7 @@ public abstract class MultiLayerNetwork<T extends Neuron> implements Network<T> 
 
                 for (Neuron inputNeuron : inputs) {
                     NeuralLink link = new NeuralLink();
-                    link.setWeight(random.nextDouble()/2 - 0.25);
+                    link.setWeight(getInitWeightValue());
 
                     inputNeuron.addOutputLink(link);
                     link.setInputNeuron(inputNeuron);
@@ -89,7 +93,7 @@ public abstract class MultiLayerNetwork<T extends Neuron> implements Network<T> 
      * Returns the {@link NeuronFactory} for this network
      * @return {@link NeuronFactory} for this network
      */
-    public NeuronFactory getNeuronFactory() {
+    public NeuronFactory<T> getNeuronFactory() {
         return neuronFactory;
     }
 }

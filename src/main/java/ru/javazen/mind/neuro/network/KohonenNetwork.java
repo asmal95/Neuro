@@ -9,6 +9,7 @@ import ru.javazen.mind.neuro.neuron.link.NeuralLink;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class KohonenNetwork extends MultiLayerNetwork<DistanceNeuron> {
 
@@ -130,5 +131,10 @@ public class KohonenNetwork extends MultiLayerNetwork<DistanceNeuron> {
 
     public void setPotentialMinimum(double potentialMinimum) {
         this.potentialMinimum = potentialMinimum;
+    }
+
+    @Override
+    protected double getInitWeightValue() {
+        return RANDOM.nextDouble() / 2 - 0.25;
     }
 }

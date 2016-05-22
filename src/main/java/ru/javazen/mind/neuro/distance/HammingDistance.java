@@ -11,7 +11,7 @@ public class HammingDistance implements DistanceFunction {
         double sum = 0;
 
         for (int i = 0; i < fCoords.length; i++) {
-            if (Math.abs(fCoords[i] - sCoords[i]) < 0.001) {
+            if (Math.abs(fCoords[i] - sCoords[i]) < 0.01) {
                 sum++;
             }
         }
